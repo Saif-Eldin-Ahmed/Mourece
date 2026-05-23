@@ -1,0 +1,13 @@
+
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24
+}
+input:focus, select:focus, textarea:focus {
+    outline: none !important;
+    border-bottom-color: #331610 !important;
+    box-shadow: none !important
+}
+.ornate-pattern {
+    background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCCuoSYxTd2qWgahbu__ZMjSBcSLda8Yj9FS2nJtoUUk2jtyjT9fqw5MAQsgZIuW9CcBt5v1pkiPgKpj4lVdu2TbQGahy3qrAJU0pDo1DWH9Vj1pKgRyKx8BR3W5_vfyzc2p9aXMTn5Fl73QakNEOdq8cQbN-55DGkpKZnyxXwQBPuBCzztfKm2Lq0OmT39aS4XUQK3cjVDIAiRKgEEKvUFbMGILWu-HXCCH2Orq-LEex3EnP2-6ytx-ynngKmWhHatb6Jr1KpoCONK");
+    opacity: 0.05
+}
