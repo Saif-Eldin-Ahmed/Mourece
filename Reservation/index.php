@@ -1,4 +1,41 @@
-<?php include("../Includes/blocks/header.php"); ?>
+<?php
+require_once "../dashboard/db.php";
+
+$message = '';
+$messageType = ''; // 'success' or 'error'
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phoneStr = trim($_POST['phone'] ?? '');
+    $prefered_date = trim($_POST['prefered_date'] ?? '');
+    $time = trim($_POST['time'] ?? '');
+    $guests = intval($_POST['guests'] ?? 2);
+    $occasion = trim($_POST['occasion'] ?? 'Casual Dining');
+    $sp_requests = trim($_POST['sp_requests'] ?? '');
+
+    // Strip non-digits from phone for int column representation
+    $phone = intval(preg_replace('/[^0-9]/', '', $phoneStr));
+
+    if (empty($name) || empty($email) || empty($phoneStr) || empty($prefered_date) || empty($time)) {
+        $message = "Please complete all required fields.";
+        $messageType = "error";
+    } else {
+        try {
+            $pdo = getDBConnection();
+            $stmt = $pdo->prepare("INSERT INTO reservations (`name`, `email`, `phone`, `prefered_date`, `time`, `guests`, `occasion`, `sp_requests`) VALUES (:name, :email, :phone, :prefered_date, :time, :guests, :occasion, :sp_requests)");
+            $stmt->execute([':name' => $name, ':email' => $email, ':phone' => $phone, ':prefered_date' => $prefered_date, ':time' => $time, ':guests' => $guests, ':occasion' => $occasion, ':sp_requests' => $sp_requests]);
+            $message = "Your reservation has been confirmed. We look forward to welcoming you.";
+            $messageType = "success";
+        } catch (Exception $e) {
+            $message = "Error booking reservation: " . $e->getMessage();
+            $messageType = "error";
+        }
+    }
+}
+
+include("../Includes/blocks/header.php");
+?>
 
 <!-- Hero Section: Updated to match Homepage SCREEN_31 style -->
 <section class="relative h-screen flex items-center justify-center overflow-hidden">
@@ -25,14 +62,25 @@
             <!-- Reservation Form Column -->
             <div class="lg:col-span-7 bg-surface p-8 md:p-12 shadow-[0_40px_80px_rgba(51,22,16,0.1)] border border-primary/20 relative overflow-hidden">
                 <div class="ornate-pattern absolute inset-0 pointer-events-none"></div>
-                <form class="relative z-10 space-y-12">
+
+                <?php if (!empty($message)): ?>
+                    <div class="mb-8 p-5 border <?php echo $messageType === 'success' ? 'bg-emerald-950/20 border-emerald-800 text-emerald-800' : 'bg-red-950/20 border-red-800 text-red-800'; ?> flex items-start space-x-3">
+                        <span class="material-symbols-outlined"><?php echo $messageType === 'success' ? 'check_circle' : 'error'; ?></span>
+                        <div>
+                            <p class="font-semibold text-sm uppercase tracking-wider"><?php echo $messageType === 'success' ? 'Success' : 'Attention'; ?></p>
+                            <p class="text-xs mt-1 leading-relaxed"><?php echo htmlspecialchars($message); ?></p>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="index.php" class="relative z-10 space-y-12">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                         <!-- Date Selection -->
                         <div class="flex flex-col space-y-2 border-b border-primary/30 pb-2">
                             <label class="text-xs font-label uppercase tracking-widest text-primary/60">Preferred Date</label>
                             <div class="flex items-center">
                                 <span class="material-symbols-outlined text-primary mr-3">calendar_today</span>
-                                <input class="w-full bg-transparent border-none p-0 font-body text-lg text-primary" type="date" />
+                                <input name="prefered_date" required class="w-full bg-transparent border-none p-0 font-body text-lg text-primary focus:ring-0" type="date" />
                             </div>
                         </div>
                         <!-- Guest Count -->
@@ -40,11 +88,11 @@
                             <label class="text-xs font-label uppercase tracking-widest text-primary/60">Party Size</label>
                             <div class="flex items-center">
                                 <span class="material-symbols-outlined text-primary mr-3">group</span>
-                                <select class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none">
-                                    <option>2 Guests</option>
-                                    <option>4 Guests</option>
-                                    <option>6 Guests</option>
-                                    <option>Private Atelier (8+)</option>
+                                <select name="guests" class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none focus:ring-0">
+                                    <option value="2">2 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                    <option value="6">6 Guests</option>
+                                    <option value="8">Private Atelier (8+)</option>
                                 </select>
                             </div>
                         </div>
@@ -53,11 +101,11 @@
                             <label class="text-xs font-label uppercase tracking-widest text-primary/60">Arrival Time</label>
                             <div class="flex items-center">
                                 <span class="material-symbols-outlined text-primary mr-3">schedule</span>
-                                <select class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none">
-                                    <option>18:30 — Evening Service</option>
-                                    <option>19:00 — Evening Service</option>
-                                    <option>20:30 — Late Service</option>
-                                    <option>21:00 — Late Service</option>
+                                <select name="time" class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none focus:ring-0">
+                                    <option value="18:30:00">18:30 — Evening Service</option>
+                                    <option value="19:00:00">19:00 — Evening Service</option>
+                                    <option value="20:30:00">20:30 — Late Service</option>
+                                    <option value="21:00:00">21:00 — Late Service</option>
                                 </select>
                             </div>
                         </div>
@@ -66,11 +114,11 @@
                             <label class="text-xs font-label uppercase tracking-widest text-primary/60">Occasion</label>
                             <div class="flex items-center">
                                 <span class="material-symbols-outlined text-primary mr-3">celebration</span>
-                                <select class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none">
-                                    <option>Casual Dining</option>
-                                    <option>Anniversary</option>
-                                    <option>Business Meeting</option>
-                                    <option>Birthday</option>
+                                <select name="occasion" class="w-full bg-transparent border-none p-0 font-body text-lg text-primary appearance-none focus:ring-0">
+                                    <option value="Casual Dining">Casual Dining</option>
+                                    <option value="Anniversary">Anniversary</option>
+                                    <option value="Business Meeting">Business Meeting</option>
+                                    <option value="Birthday">Birthday</option>
                                 </select>
                             </div>
                         </div>
@@ -78,23 +126,23 @@
                     <!-- Special Requests -->
                     <div class="flex flex-col space-y-2 border-b border-primary/30 pb-2">
                         <label class="text-xs font-label uppercase tracking-widest text-primary/60">Dietary Requirements &amp; Special Requests</label>
-                        <textarea class="w-full bg-transparent border-none p-0 font-body text-lg text-primary placeholder:text-primary/30 resize-none" placeholder="Tell us about allergies or specific table preferences..." rows="2"></textarea>
+                        <textarea name="sp_requests" class="w-full bg-transparent border-none p-0 font-body text-lg text-primary placeholder:text-primary/30 resize-none focus:ring-0" placeholder="Tell us about allergies or specific table preferences..." rows="2"></textarea>
                     </div>
                     <!-- Contact Details -->
                     <div class="pt-6 space-y-10">
-                        <h3 class="font-headline text-2xl text-primary">Contact Details</h3>
+                        <h3 class="font-headline text-2xl text-primary font-bold italic">Contact Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                             <div class="flex flex-col space-y-2 border-b border-primary/30 pb-2">
                                 <label class="text-xs font-label uppercase tracking-widest text-primary/60">Full Name</label>
-                                <input class="w-full bg-transparent border-none p-0 font-body text-lg text-primary" placeholder="Azeezah Al-Saud" type="text" />
+                                <input name="name" required class="w-full bg-transparent border-none p-0 font-body text-lg text-primary focus:ring-0" placeholder="Azeezah Al-Saud" type="text" />
                             </div>
                             <div class="flex flex-col space-y-2 border-b border-primary/30 pb-2">
                                 <label class="text-xs font-label uppercase tracking-widest text-primary/60">Email Address</label>
-                                <input class="w-full bg-transparent border-none p-0 font-body text-lg text-primary" placeholder="heritage@mourece.com" type="email" />
+                                <input name="email" required class="w-full bg-transparent border-none p-0 font-body text-lg text-primary focus:ring-0" placeholder="heritage@mourece.com" type="email" />
                             </div>
                             <div class="flex flex-col space-y-2 border-b border-primary/30 pb-2">
                                 <label class="text-xs font-label uppercase tracking-widest text-primary/60">Phone Number</label>
-                                <input class="w-full bg-transparent border-none p-0 font-body text-lg text-primary" placeholder="+966 --- --- ---" type="tel" />
+                                <input name="phone" required class="w-full bg-transparent border-none p-0 font-body text-lg text-primary focus:ring-0" placeholder="96612345678" type="tel" />
                             </div>
                         </div>
                     </div>

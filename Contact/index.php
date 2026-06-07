@@ -1,4 +1,38 @@
-<?php include("../Includes/blocks/header.php"); ?>
+<?php
+require_once "../dashboard/db.php";
+
+$message = '';
+$messageType = ''; // 'success' or 'error'
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $phoneStr = trim($_POST['phone'] ?? '');
+    $inquiry = trim($_POST['subject'] ?? 'General Inquiry');
+    $massage = trim($_POST['message'] ?? '');
+
+    // Strip non-digits from phone for int column representation
+    $phone = intval(preg_replace('/[^0-9]/', '', $phoneStr));
+
+    if (empty($name) || empty($email) || empty($massage)) {
+        $message = "Please complete all required fields (Name, Email, and Message).";
+        $messageType = "error";
+    } else {
+        try {
+            $pdo = getDBConnection();
+            $stmt = $pdo->prepare("INSERT INTO contacts (name, email, phone, inquiry, massage) VALUES (?, ?, ?, ?, ?)");
+            $stmt->execute([$name, $email, $phone, $inquiry, $massage]);
+            $message = "Your message has been sent successfully. Our concierge will get in touch shortly.";
+            $messageType = "success";
+        } catch (Exception $e) {
+            $message = "Error sending message: " . $e->getMessage();
+            $messageType = "error";
+        }
+    }
+}
+
+include("../Includes/blocks/header.php"); 
+?>
 
 <main class="pt-0">
   <!-- Hero Section -->
@@ -37,10 +71,23 @@
         <h2 class="font-headline text-3xl mb-12 relative z-10 text-primary">
           Inquiries &amp; Correspondence
         </h2>
-        <form class="space-y-12 relative z-10">
+
+        <?php if (!empty($message)): ?>
+            <div class="mb-8 p-5 border <?php echo $messageType === 'success' ? 'bg-emerald-950/20 border-emerald-800 text-emerald-800' : 'bg-red-950/20 border-red-800 text-red-800'; ?> flex items-start space-x-3">
+                <span class="material-symbols-outlined"><?php echo $messageType === 'success' ? 'check_circle' : 'error'; ?></span>
+                <div>
+                    <p class="font-semibold text-sm uppercase tracking-wider"><?php echo $messageType === 'success' ? 'Success' : 'Attention'; ?></p>
+                    <p class="text-xs mt-1 leading-relaxed"><?php echo htmlspecialchars($message); ?></p>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="index.php" class="space-y-12 relative z-10">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div class="relative">
               <input
+                name="name"
+                required
                 class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent"
                 id="name"
                 placeholder=" "
@@ -51,6 +98,8 @@
             </div>
             <div class="relative">
               <input
+                name="email"
+                required
                 class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent"
                 id="email"
                 placeholder=" "
@@ -60,18 +109,36 @@
                 for="email">Email Address</label>
             </div>
           </div>
-          <div class="relative">
-            <input
-              class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent"
-              id="subject"
-              placeholder=" "
-              type="text" />
-            <label
-              class="absolute left-0 -top-3.5 text-primary/50 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-primary peer-focus:text-sm uppercase tracking-widest font-label"
-              for="subject">Nature of Inquiry</label>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+            <div class="relative">
+              <input
+                name="phone"
+                class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent"
+                id="phone"
+                placeholder=" "
+                type="tel" />
+              <label
+                class="absolute left-0 -top-3.5 text-primary/50 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-primary peer-focus:text-sm uppercase tracking-widest font-label"
+                for="phone">Phone Number</label>
+            </div>
+            <div class="relative">
+              <input
+                name="subject"
+                class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent"
+                id="subject"
+                placeholder=" "
+                type="text" />
+              <label
+                class="absolute left-0 -top-3.5 text-primary/50 text-sm transition-all peer-placeholder-shown:text-base peer-placeholder-shown:top-3 peer-focus:-top-3.5 peer-focus:text-primary peer-focus:text-sm uppercase tracking-widest font-label"
+                for="subject">Nature of Inquiry</label>
+            </div>
           </div>
+
           <div class="relative">
             <textarea
+              name="message"
+              required
               class="peer w-full bg-transparent border-0 border-b border-primary/20 py-3 focus:ring-0 focus:border-primary transition-colors placeholder-transparent resize-none"
               id="message"
               placeholder=" "
