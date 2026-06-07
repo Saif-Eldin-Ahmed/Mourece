@@ -5,10 +5,10 @@ $inactiveClass = "text-[#E5D1C0]/70 hover:text-[#E5D1C0] transition-all duration
 
 // Page specific titles
 $titles = [
-  'Homepage' => 'Mourece | A Step into Heritage',
-  'Menu' => 'Menu | Mourece',
-  'Reservation' => 'Reservations | Mourece',
-  'Contact' => 'Mourece | Connect with the Atelier'
+  'Homepage' => 'Mourece | Homepage',
+  'Menu' => 'Mourece | Menu',
+  'Reservation' => 'Mourece | Reservations',
+  'Contact' => 'Mourece | Contact'
 ];
 $title = isset($titles[$currentPage]) ? $titles[$currentPage] : 'Mourece';
 
@@ -31,6 +31,7 @@ $bodyClass = isset($bodyClasses[$currentPage]) ? $bodyClasses[$currentPage] : 'b
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/x-icon" href="../Includes/images/favicon.png" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
@@ -39,7 +40,7 @@ $bodyClass = isset($bodyClasses[$currentPage]) ? $bodyClasses[$currentPage] : 'b
     <nav class="flex justify-between items-center w-full px-8 md:px-12 py-4 max-w-screen-2xl mx-auto transition-all duration-500" id="main-nav">
       <div class="flex items-center gap-12" id="nav-left-side">
         <a href="../Homepage/index.php" class="transition-all duration-700 transform w-32 md:w-40 " id="logo-container">
-          <img src="../Includes/images/Logo.png" alt="Mourece Logo" class="h-16 md:h-20 object-contain transition-all duration-700" id="header-logo" />
+          <img src="../Includes/images/favicon.png" alt="Mourece Logo" class="h-16 md:h-20 object-contain transition-all duration-700" id="header-logo" />
         </a>
         <ul
           class="hidden md:flex gap-8 font-serif tracking-tight text-base uppercase items-center transition-all duration-700"

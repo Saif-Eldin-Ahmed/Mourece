@@ -8,7 +8,7 @@
             <div class="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/30 to-surface"></div>
         </div>
         <div class="relative z-10 text-center px-8 max-w-4xl">
-            <h1 class="font-headline text-4xl md:text-7xl lg:text-8xl text-on-primary mb-6 tracking-tight font-bold italic">
+            <h1 class="font-headline text-4xl md:text-7xl lg:text-8xl text-on-primary mb-6 tracking-tight font-bold italic text-nowrap">
                 A Step into Heritage
             </h1>
             <p class="font-body text-lg md:text-xl text-on-primary/90 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
@@ -36,7 +36,7 @@
                     <span class="text-primary/70 font-label uppercase tracking-[0.3em] text-xs md:text-sm mb-4 block">The Curated Collection</span>
                     <h2 class="font-headline text-4xl md:text-6xl text-primary font-bold">The Artisanal Menu</h2>
                 </div>
-                <a class="group flex items-center gap-4 text-primary font-label uppercase tracking-widest text-xs md:text-sm border-b border-primary/20 pb-2" href="#">
+                <a class="group flex items-center gap-4 text-primary font-label uppercase tracking-widest text-xs md:text-sm border-b border-primary/20 pb-2" href="../Menu/">
                     View Full Menu
                     <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
                 </a>
@@ -144,18 +144,6 @@
 </main>
 <!-- Footer -->
 <?php include("../Includes/blocks/footer.php"); ?>
-<!-- Floating Reservation Bar (Signature Component - Mobile/Small Tablet Only) -->
-<div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 md:hidden w-[90%]">
-    <div class="bg-surface/90 backdrop-blur-xl px-6 py-4 flex justify-between items-center shadow-2xl rounded-lg border border-primary/20">
-        <div class="flex flex-col">
-            <span class="text-[9px] font-label uppercase tracking-widest text-on-surface-variant">Heritage Dining</span>
-            <span class="text-xs font-headline font-bold text-primary italic">Limited Tables</span>
-        </div>
-        <button class="bg-primary text-on-primary px-5 py-3 font-label text-[10px] uppercase tracking-widest rounded-sm">
-            Book Now
-        </button>
-    </div>
-</div>
 </body>
 
 </html>

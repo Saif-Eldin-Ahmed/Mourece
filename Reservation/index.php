@@ -100,7 +100,7 @@
                     </div>
                     <div class="pt-8">
                         <button class="w-full bg-primary text-on-primary py-5 font-label tracking-widest uppercase text-sm hover:opacity-90 transition-opacity flex items-center justify-center space-x-3 group" type="submit">
-                            <span>Confirm Your Reservation</span>
+                            <span>Confirm</span>
                             <span class="material-symbols-outlined text-sm group-hover:translate-x-2 transition-transform">arrow_forward</span>
                         </button>
                     </div>

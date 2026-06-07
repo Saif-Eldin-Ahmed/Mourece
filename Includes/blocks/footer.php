@@ -1,7 +1,7 @@
-<footer class="w-full py-12 md:py-16 px-8 md:px-12 bg-primary/5 border-t border-primary/10">
+<footer class="w-full py-12 md:py-16 lg:py-4 px-8 md:px-12 bg-primary/5 border-t border-primary/10">
     <div class="flex flex-col md:flex-row justify-between items-center gap-10 w-full max-w-7xl mx-auto">
         <div class="text-lg font-serif text-primary">
-            <img src="../Includes/images/Logo.png" alt="Mourece" class="w-10">
+            <img src="../Includes/images/favicon.png" alt="Mourece" class="w-10">
         </div>
         <div class="text-primary/70 font-sans text-[10px] md:text-xs tracking-widest uppercase text-center md:text-left">
             © 2024 Mourece. Artisanal Heritage Dining.

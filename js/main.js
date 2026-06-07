@@ -17,10 +17,10 @@ $(document).ready(function () {
           'font-size': '32px',
         });
         $logo.css({
-          'width': '80px',
-          'height': '80px',
+          'width': '70px',
+          'height': '70px',
         });
-        $logoCon.css({ 'width': '80px', 'height': '80px', 'top': '50%', 'left': '70px' });
+        $logoCon.css({ 'width': '70px', 'height': '70px', 'top': '50%', 'left': '70px' });
       } else if ($(window).width() > 767) {
         $header.css('height', ''); // Reset to default
         $logo.addClass('h-12 md:h-14').removeClass('h-16 md:h-20');
@@ -34,7 +34,6 @@ $(document).ready(function () {
           'height': '50px',
         });
         $logoCon.css({ 'width': '50px', 'height': '50px', 'top': '50%', 'left': '68px' });
-
       } else if ($(window).width() <= 767) {
         $logo.addClass('h-12 md:h-14').removeClass('h-16 md:h-20');
         $logo.css({
